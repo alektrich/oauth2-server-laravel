@@ -146,6 +146,7 @@ class OAuth2ServerServiceProvider extends ServiceProvider
             $checker = $app->make(ResourceServer::class);
 
             $authorizer = new Authorizer($issuer, $checker);
+            $app['request']->replace(\Input::all());
             $authorizer->setRequest($app['request']);
             $authorizer->setTokenType($app->make($config['token_type']));
 
