@@ -96,7 +96,7 @@ class FluentScope extends AbstractFluentAdapter implements ScopeInterface
      * Example SQL query:
      *
      * <code>
-     * SELECT * FROM oauth_scopes WHERE scope = :scope
+     * SELECT * FROM old_oauth_scopes WHERE scope = :scope
      * </code>
      *
      * @param string $scope The scope
@@ -107,19 +107,19 @@ class FluentScope extends AbstractFluentAdapter implements ScopeInterface
      */
     public function get($scope, $grantType = null, $clientId = null)
     {
-        $query = $this->getConnection()->table('oauth_scopes')
-                    ->select('oauth_scopes.id as id', 'oauth_scopes.description as description')
-                    ->where('oauth_scopes.id', $scope);
+        $query = $this->getConnection()->table('old_oauth_scopes')
+                    ->select('old_oauth_scopes.id as id', 'old_oauth_scopes.description as description')
+                    ->where('old_oauth_scopes.id', $scope);
 
         if ($this->limitClientsToScopes === true && !is_null($clientId)) {
-            $query = $query->join('oauth_client_scopes', 'oauth_scopes.id', '=', 'oauth_client_scopes.scope_id')
-                           ->where('oauth_client_scopes.client_id', $clientId);
+            $query = $query->join('old_oauth_client_scopes', 'old_oauth_scopes.id', '=', 'old_oauth_client_scopes.scope_id')
+                           ->where('old_oauth_client_scopes.client_id', $clientId);
         }
 
         if ($this->limitScopesToGrants === true && !is_null($grantType)) {
-            $query = $query->join('oauth_grant_scopes', 'oauth_scopes.id', '=', 'oauth_grant_scopes.scope_id')
-                           ->join('oauth_grants', 'oauth_grants.id', '=', 'oauth_grant_scopes.grant_id')
-                           ->where('oauth_grants.id', $grantType);
+            $query = $query->join('old_oauth_grant_scopes', 'old_oauth_scopes.id', '=', 'old_oauth_grant_scopes.scope_id')
+                           ->join('old_oauth_grants', 'old_oauth_grants.id', '=', 'old_oauth_grant_scopes.grant_id')
+                           ->where('old_oauth_grants.id', $grantType);
         }
 
         $result = $query->first();

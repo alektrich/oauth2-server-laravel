@@ -31,9 +31,9 @@ class FluentRefreshToken extends AbstractFluentAdapter implements RefreshTokenIn
      */
     public function get($token)
     {
-        $result = $this->getConnection()->table('oauth_refresh_tokens')
-                ->where('oauth_refresh_tokens.id', $token)
-                ->where('oauth_refresh_tokens.expire_time', '>=', time())
+        $result = $this->getConnection()->table('old_oauth_refresh_tokens')
+                ->where('old_oauth_refresh_tokens.id', $token)
+                ->where('old_oauth_refresh_tokens.expire_time', '>=', time())
                 ->first();
 
         if (is_null($result)) {
@@ -57,7 +57,7 @@ class FluentRefreshToken extends AbstractFluentAdapter implements RefreshTokenIn
      */
     public function create($token, $expireTime, $accessToken)
     {
-        $this->getConnection()->table('oauth_refresh_tokens')->insert([
+        $this->getConnection()->table('old_oauth_refresh_tokens')->insert([
             'id' => $token,
             'expire_time' => $expireTime,
             'access_token_id' => $accessToken,
@@ -80,7 +80,7 @@ class FluentRefreshToken extends AbstractFluentAdapter implements RefreshTokenIn
      */
     public function delete(RefreshTokenEntity $token)
     {
-        $this->getConnection()->table('oauth_refresh_tokens')
+        $this->getConnection()->table('old_oauth_refresh_tokens')
         ->where('id', $token->getId())
         ->delete();
     }
